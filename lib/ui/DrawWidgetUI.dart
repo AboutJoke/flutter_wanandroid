@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_wanandroid/GlobalConfig.dart';
+import 'login/LoginPageUI.dart';
 
 class WidgetDraw extends StatefulWidget {
   @override
@@ -15,7 +16,29 @@ class _WidgetDrwState extends State<WidgetDraw> {
       child: new ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
-          new UserAccountsDrawerHeader(accountName: null, accountEmail: null),
+          new UserAccountsDrawerHeader(
+              accountName: new InkWell(// 水波纹
+                child: Text("sign in"),
+                onTap: () {
+                  //未登录跳转登录页面
+                  onLoginClick();
+                },
+              ),
+              accountEmail: null,
+            currentAccountPicture: CircleAvatar(
+              backgroundImage: AssetImage('images/avatar.jpg'),
+            ),
+            decoration: BoxDecoration(
+                color: Colors.grey[800],
+                image: DecorationImage(
+                  image: AssetImage(GlobalConfig.dark
+                      ? "images/bg_adrk.png"
+                      : "images/bg_light.jpg"),
+                  fit: BoxFit.cover,
+                  colorFilter: ColorFilter.mode(
+                      Colors.grey[800].withOpacity(0.6), BlendMode.hardLight),)
+            ),
+          ),
           new ListTile(
             title: new Text(
               "我的收藏",
@@ -88,5 +111,11 @@ class _WidgetDrwState extends State<WidgetDraw> {
         ],
       ),
     );
+  }
+
+  void onLoginClick() {
+    Navigator.of(context).push(new MaterialPageRoute(builder: (context) {
+      return new LoginPageUI();
+    }));
   }
 }
