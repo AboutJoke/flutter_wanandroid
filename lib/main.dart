@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import './widget/MyBottomNavigation.dart';
+import './ui/DrawWidgetUI.dart';
+import './ui/SearchPageUI.dart';
 
 void main() => runApp(MyApp());
 
@@ -51,13 +53,19 @@ class _MyHomeState extends State<MyHomePage> with AutomaticKeepAliveClientMixin{
         actions: _appBarAction()
     );
   }
+  
+  void _handlerPress() {
+    Navigator.push(context, new MaterialPageRoute(builder: (context) {
+      return new WidgetSearchPage(null);
+    }));
+  }
 
   List<Widget> _appBarAction() {
     if (_isShowDraw) {
       return [
         new IconButton(
             icon: new Icon(Icons.search),
-            onPressed: null)
+            onPressed: _handlerPress)
       ];
     } else {
       return null;
@@ -69,7 +77,7 @@ class _MyHomeState extends State<MyHomePage> with AutomaticKeepAliveClientMixin{
     return new Container(
       child: new Scaffold(
         appBar: _appBarWidget(context),
-        drawer: null,
+        drawer: WidgetDraw(),
         bottomNavigationBar: MyBottomNavigation(
           index: _index,
           onChange: _handleChange,
