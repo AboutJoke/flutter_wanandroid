@@ -18,6 +18,7 @@ class _LoginPageState extends State<LoginPageUI> {
 
   @override
   void initState() {
+    super.initState();
     _isButton1Disabled = true;
   }
 
@@ -59,7 +60,7 @@ class _LoginPageState extends State<LoginPageUI> {
                 ),
                 maxLines: 1,
                 validator: (v) {
-                  return v.trim().length > 0 ? null : "";
+                  return v.trim().length > 0 ? null : "用户名不能为空";
                 },
               ),
             ),
@@ -83,7 +84,7 @@ class _LoginPageState extends State<LoginPageUI> {
                       return "";
                     }
                   } else {
-                    return null;
+                    return "密码不能为空";
                   }
                 },
               ),
