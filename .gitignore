@@ -69,3 +69,12 @@ build/
 !**/ios/**/default.pbxuser
 !**/ios/**/default.perspectivev3
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
+/build.gradle
+将删除 .gradle/4.10/fileChanges/
+将删除 .gradle/4.10/fileHashes/fileHashes.bin
+将删除 .gradle/4.10/gc.properties
+将删除 .gradle/4.10/vcsMetadata-1/
+将删除 .gradle/buildOutputCleanup/cache.properties
+将删除 .gradle/vcs-1/
+将删除 build.gradle
+将删除 local.properties
