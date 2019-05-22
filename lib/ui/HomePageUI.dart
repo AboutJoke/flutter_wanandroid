@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_wanandroid/model/ArticleModel.dart';
 import 'DrawWidgetUI.dart';
+import '../widget/BannerWidger.dart';
+import '../api/HttpServices.dart';
+import '../utils/timeline_util.dart';
 
 class HomePageUI extends StatefulWidget {
   @override
@@ -9,9 +13,26 @@ class HomePageUI extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePageUI> {
-  List<String> _data = new List();
+  List<Article> _data = new List();
+  ScrollController _scrollController = ScrollController(); //listview的控制器
+  int _page = 0; //加载的页数
 
-  void _getData() {}
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
+  Future<Null> getData() async {
+    _page = 0;
+    print("$_page");
+
+    CommonService().getArticleList((ArticleModel _articleModel) {
+      setState(() {
+        _data = _articleModel.data.datas;
+      });
+    }, _page);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +47,7 @@ class _HomePageState extends State<HomePageUI> {
                 );
               },
               itemCount: _data.length + 2),
-          onRefresh: _getData),
+          onRefresh: getData),
       drawer: WidgetDraw(),
     );
   }
@@ -36,7 +57,7 @@ class _HomePageState extends State<HomePageUI> {
       return Container(
         height: 200,
         color: Colors.grey,
-        child: null,
+        child: new BannerWidget(),
       );
     }
 
@@ -46,34 +67,53 @@ class _HomePageState extends State<HomePageUI> {
         child: new Column(
           children: <Widget>[
             new Container(
-                margin: const EdgeInsets.only(left: 16, top: 16),
-                child: new Row(
-                  children: <Widget>[
-                    new Text(
-                      "anchor",
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
-                    ),
-                    new Expanded(
-                        child: new Text(
-                      "time",
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
-                    ))
-                  ],
-                )),
-            new Container(
               margin: const EdgeInsets.only(left: 16, top: 8, right: 16),
-              child: new Text(
-                "title-tiele-title-tiele",
-                style: TextStyle(fontSize: 20, color: Colors.black87),
+              child: new Row(
+                children: <Widget>[
+                  new Text(
+                    _data[index - 1].author,
+                    textAlign: TextAlign.start,
+                    style: TextStyle(fontSize: 14, color: Colors.grey),
+                  ),
+                  new Expanded(
+                    child: new Text(
+                      TimelineUtil.format(_data[index - 1].publishTime),
+                      style: TextStyle(fontSize: 14, color: Colors.grey),
+                      textAlign: TextAlign.end,
+                    ),
+                  )
+                ],
               ),
             ),
             new Container(
-              margin: const EdgeInsets.only(left: 16, top: 8, bottom: 16),
-              child: new Text(
-                "category",
-                style: TextStyle(fontSize: 16, color: Colors.grey),
+              margin: const EdgeInsets.only(left: 16, top: 8, right: 16),
+              child: new Row(
+                children: <Widget>[
+                  new Expanded(
+                    child: new Text(
+                      _data[index - 1].title,
+                      maxLines: 2,
+                      style: TextStyle(fontSize: 20, color: Colors.black87),
+                      textAlign: TextAlign.start,
+                    ),
+                  ),
+                ],
               ),
-            )
+            ),
+            new Container(
+              margin: const EdgeInsets.only(top: 4, bottom: 8, right: 16),
+              child: new Row(
+                children: <Widget>[
+                  new Expanded(
+                    child: new Text(
+                      _data[index - 1].superChapterName,
+                      textAlign: TextAlign.end,
+                      style: TextStyle(fontSize: 14, color: Colors.grey),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       );
@@ -81,6 +121,7 @@ class _HomePageState extends State<HomePageUI> {
     return _getMoreWidget();
   }
 
+  ///上拉加载状态
   Widget _getMoreWidget() {
     return Container(
       padding: EdgeInsets.all(16),

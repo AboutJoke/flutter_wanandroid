@@ -1,4 +1,11 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import '../../api/HttpServices.dart';
+import '../../model/UserModel.dart';
+import '../../common/User.dart';
+import '../../common/Application.dart';
+import '../../event/LoginEvent.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginPageUI extends StatefulWidget {
   @override
@@ -22,7 +29,20 @@ class _LoginPageState extends State<LoginPageUI> {
     _isButton1Disabled = true;
   }
 
-  void _onLogin() {}
+  Future<Null> _onLogin() async{
+    CommonService().login((UserModel _userModel,Response _response) {
+      if(_userModel != null) {
+        User().saveUserInfo(_userModel, _response);
+        Application.eventBus.fire(new LoginEvent());
+        if(_userModel.errorCode == CommonService.RESULT_OK) {
+          Navigator.of(context).pop(this);
+          Fluttertoast.showToast(msg: "登录成功");
+        } else {
+          Fluttertoast.showToast(msg: _userModel.errorMsg);
+        }
+      }
+    } , _userNameController.text, _userPwdController.text);
+  }
 
   _onTextFileChange() {
     setState(() {
@@ -59,9 +79,9 @@ class _LoginPageState extends State<LoginPageUI> {
                   prefixIcon: Icon(Icons.person),
                 ),
                 maxLines: 1,
-                validator: (v) {
-                  return v.trim().length > 0 ? null : "用户名不能为空";
-                },
+//                validator: (v) {
+//                  return v.trim().length > 0 ? null : "用户名不能为空";
+//                },
               ),
             ),
             new Container(
@@ -76,17 +96,20 @@ class _LoginPageState extends State<LoginPageUI> {
                 ),
                 obscureText: true,
                 maxLines: 1,
-                validator: (v) {
-                  String regexEmail =
-                      "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*\$";
-                  if (v.trim().length > 0) {
-                    if (!matches(regexEmail, v.trim())) {
-                      return "";
-                    }
-                  } else {
-                    return "密码不能为空";
-                  }
-                },
+//                validator: (v) {
+//                  return v.trim().length > 0 ? null : "密码不能为空";
+//                },
+//                validator: (v) {
+//                  String regexEmail =
+//                      "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*\$";
+//                  if (v.trim().length > 0) {
+//                    if (!matches(regexEmail, v.trim())) {
+//                      return "";
+//                    }
+//                  } else {
+//                    return "密码不能为空";
+//                  }
+//                },
               ),
             ),
             new Container(

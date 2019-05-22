@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_wanandroid/GlobalConfig.dart';
 import 'login/LoginPageUI.dart';
+import '../common/Application.dart';
+import '../event/LoginEvent.dart';
+import '../common/User.dart';
+import '../GlobalConfig.dart';
 
 class WidgetDraw extends StatefulWidget {
   @override
@@ -11,20 +15,54 @@ class WidgetDraw extends StatefulWidget {
 
 class _WidgetDrwState extends State<WidgetDraw> {
   @override
+  void initState() {
+    super.initState();
+    this.registerLoginEvent();
+  }
+
+  void registerLoginEvent() {
+    Application.eventBus.on<LoginEvent>().listen((event) {
+      changeUI();
+    });
+  }
+
+  changeUI() async {
+    setState(() {
+      print(User.singleton.userName);
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Drawer(
       child: new ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
           new UserAccountsDrawerHeader(
-              accountName: new InkWell(// 水波纹
-                child: Text("sign in"),
-                onTap: () {
-                  //未登录跳转登录页面
-                  onLoginClick();
-                },
+            accountName: new InkWell(
+              // 水波纹
+              child: Text(
+                User.singleton.userName == null
+                    ? "sign in"
+                    : User.singleton.userName,
+                style: TextStyle(
+                    fontSize: 16,
+                    color: GlobalConfig.themeDataLight.primaryColor),
               ),
-              accountEmail: null,
+              onTap: () {
+                if (User.singleton.userName != null) {
+                  return null;
+                } else {
+                  onLoginClick();
+                }
+              },
+            ),
+            accountEmail: null,
             currentAccountPicture: CircleAvatar(
               backgroundImage: AssetImage('images/avatar.jpg'),
             ),
@@ -36,8 +74,8 @@ class _WidgetDrwState extends State<WidgetDraw> {
                       : "images/bg_light.jpg"),
                   fit: BoxFit.cover,
                   colorFilter: ColorFilter.mode(
-                      Colors.grey[800].withOpacity(0.6), BlendMode.hardLight),)
-            ),
+                      Colors.grey[800].withOpacity(0.6), BlendMode.hardLight),
+                )),
           ),
           new ListTile(
             title: new Text(

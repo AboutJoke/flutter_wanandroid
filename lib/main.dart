@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import './widget/MyBottomNavigation.dart';
 import './ui/DrawWidgetUI.dart';
 import './ui/SearchPageUI.dart';
+import './ui/HomePageUI.dart';
 
 void main() => runApp(MyApp());
 
@@ -39,10 +40,32 @@ class _MyHomeState extends State<MyHomePage> with AutomaticKeepAliveClientMixin{
     "项目",
   ];
 
+  bool _isShowAppBar = true;
   bool _isShowDraw = true;
 
-  void _handleChange(int value){
 
+  @override
+  void initState() {
+    super.initState();
+    _pageList = [
+      HomePageUI(),
+    ];
+  }
+
+  void _handleChange(int value){
+    setState(() {
+      if(value == 0 || value == 1 || value == 3) {
+        _isShowAppBar = true;
+      } else{
+        _isShowAppBar = false;
+      }
+
+      if(value == 0) {
+        _isShowDraw = true;
+      } else {
+        _isShowDraw = false;
+      }
+    });
   }
 
 
@@ -74,15 +97,21 @@ class _MyHomeState extends State<MyHomePage> with AutomaticKeepAliveClientMixin{
 
   @override
   Widget build(BuildContext context) {
-    return new Container(
-      child: new Scaffold(
-        appBar: _appBarWidget(context),
-        drawer: WidgetDraw(),
-        bottomNavigationBar: MyBottomNavigation(
-          index: _index,
-          onChange: _handleChange,
-        ),
-      ),
+    return new WillPopScope(
+        child: new DefaultTabController(
+            length: 5,
+            child: new Scaffold(
+              appBar: _isShowAppBar ? _appBarWidget(context) : null,
+              drawer: _isShowDraw ? WidgetDraw() : null,
+              bottomNavigationBar: MyBottomNavigation(
+                  onChange: _handleChange,
+              index: _index,),
+              body: new IndexedStack(
+                index: _index,
+                children: _pageList,
+              ),
+        )),
+        onWillPop: null
     );
   }
 
