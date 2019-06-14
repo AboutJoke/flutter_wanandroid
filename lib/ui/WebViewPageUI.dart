@@ -38,6 +38,11 @@ class _WebViewPageState extends State<WebViewPageUI> {
       body: new WebView(
         initialUrl: widget.url,
         javascriptMode: JavascriptMode.unrestricted,
+        onPageFinished: (url){
+          setState(() {
+            isLoad = false;
+          });
+        },
       ),
     );
   }

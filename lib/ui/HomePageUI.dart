@@ -4,6 +4,7 @@ import 'DrawWidgetUI.dart';
 import '../widget/BannerWidger.dart';
 import '../api/HttpServices.dart';
 import '../utils/timeline_util.dart';
+import '../utils/RouteUtil.dart';
 
 class HomePageUI extends StatefulWidget {
   @override
@@ -12,7 +13,8 @@ class HomePageUI extends StatefulWidget {
   }
 }
 
-class _HomePageState extends State<HomePageUI> {
+class _HomePageState extends State<HomePageUI>
+    with AutomaticKeepAliveClientMixin {
   List<Article> _data = new List();
   ScrollController _scrollController = ScrollController(); //listview的控制器
   int _page = 0; //加载的页数
@@ -21,6 +23,13 @@ class _HomePageState extends State<HomePageUI> {
   void initState() {
     super.initState();
     getData();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        print('滑动到了最底部');
+        getMoreData();
+      }
+    });
   }
 
   Future<Null> getData() async {
@@ -34,19 +43,32 @@ class _HomePageState extends State<HomePageUI> {
     }, _page);
   }
 
+  Future<Null> getMoreData() async {
+    _page++;
+    print("$_page");
+
+    CommonService().getArticleList((ArticleModel _articleModel) {
+      setState(() {
+        _data.addAll(_articleModel.data.datas);
+      });
+    }, _page);
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       body: new RefreshIndicator(
           child: new ListView.separated(
-              itemBuilder: _rendRow,
-              separatorBuilder: (BuildContext context, int index) {
-                return Container(
-                  height: 0.5,
-                  color: Colors.black26,
-                );
-              },
-              itemCount: _data.length + 2),
+            itemBuilder: _rendRow,
+            separatorBuilder: (BuildContext context, int index) {
+              return Container(
+                height: 0.5,
+                color: Colors.black26,
+              );
+            },
+            itemCount: _data.length + 2,
+            controller: _scrollController,
+          ),
           onRefresh: getData),
       drawer: WidgetDraw(),
     );
@@ -63,7 +85,9 @@ class _HomePageState extends State<HomePageUI> {
 
     if (index - 1 < _data.length) {
       return InkWell(
-        onTap: null,
+        onTap: () {
+          RouteUtils.toWebView(context, _data[index-1].title, _data[index-1].link);
+        },
         child: new Column(
           children: <Widget>[
             new Container(
@@ -93,7 +117,7 @@ class _HomePageState extends State<HomePageUI> {
                     child: new Text(
                       _data[index - 1].title,
                       maxLines: 2,
-                      style: TextStyle(fontSize: 20, color: Colors.black87),
+                      style: TextStyle(fontSize: 16, color: Colors.black87),
                       textAlign: TextAlign.start,
                     ),
                   ),
@@ -135,4 +159,13 @@ class _HomePageState extends State<HomePageUI> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _scrollController.dispose();
+  }
+
+  @override
+  bool get wantKeepAlive => true;
 }
