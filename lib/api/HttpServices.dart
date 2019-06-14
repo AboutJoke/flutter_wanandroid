@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_wanandroid/model/ArticleModel.dart';
 import 'package:flutter_wanandroid/model/BannerModel.dart';
 import 'package:flutter_wanandroid/model/UserModel.dart';
+import '../model/HotWordModel.dart';
 import 'DioManager.dart';
 import 'package:flutter_wanandroid/common/User.dart';
 
@@ -52,6 +53,23 @@ class CommonService {
     DioManager.singleton.dio
         .get(Api.HOME_ARTICLE_LIST + "$_page/json", options: _getOptions())
         .then((response) {
+      callback(ArticleModel(response.data));
+    });
+  }
+
+  /// 获取搜索热词
+  void getSearchHotWord(Function callback) async {
+    DioManager.singleton.dio.get(Api.SEARCH_HOT_WORD, options: _getOptions()).then((response) {
+      callback(HotWordModel(response.data));
+    });
+  }
+
+  /// 获取搜索结果
+  void getSearchResult(Function callback,int _page,String _id) async {
+    FormData formData = new FormData.from({
+      "k": _id,
+    });
+    DioManager.singleton.dio.post(Api.SEARCH_RESULT+"$_page/json", data: formData, options: _getOptions()).then((response) {
       callback(ArticleModel(response.data));
     });
   }

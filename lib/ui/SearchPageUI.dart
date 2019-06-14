@@ -19,7 +19,8 @@ class _WidgetSearchState extends State<WidgetSearchPage> {
 
   String searchStr;
   SearchResultPage _searchResultPage;
-  _WidgetSearchState(this.searchStr)
+
+  _WidgetSearchState(this.searchStr);
 
   @override
   void initState() {
@@ -27,12 +28,25 @@ class _WidgetSearchState extends State<WidgetSearchPage> {
     setState(() {
       _inputController = new TextEditingController(text: searchStr);
     });
+    changeContent();
   }
 
-  void _onSearch() {}
+  void changeContent() {
+    setState(() {
+      _searchResultPage = new SearchResultPage(new ValueKey(_inputController.text));
+    });
+    _focusNode.unfocus();
+  }
+
+  void _onSearch() {
+    changeContent();
+  }
 
   void _onClose() {
-    Navigator.pop(context);
+//    Navigator.pop(context);
+    setState(() {
+      _inputController.clear();
+    });
   }
 
   @override
@@ -66,8 +80,8 @@ class _WidgetSearchState extends State<WidgetSearchPage> {
       ),
       body: (_inputController.text == null || _inputController.text.isEmpty)
           ? new Center(
-              child: new SearchHotPage(),
-            )
+        child: new SearchHotPage(),
+      )
           : _searchResultPage,
     );
   }

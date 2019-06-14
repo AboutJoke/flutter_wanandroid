@@ -78,3 +78,13 @@ build/
 将删除 .gradle/vcs-1/
 将删除 build.gradle
 将删除 local.properties
+/local.properties
+将删除 plugins/flutter_webview_plugin-master/.gitignore
+将删除 plugins/flutter_webview_plugin-master/CHANGELOG.md
+将删除 plugins/flutter_webview_plugin-master/LICENSE
+将删除 plugins/flutter_webview_plugin-master/README.md
+将删除 plugins/flutter_webview_plugin-master/analysis_options.yaml
+将删除 plugins/flutter_webview_plugin-master/android/
+将删除 plugins/flutter_webview_plugin-master/ios/
+将删除 plugins/flutter_webview_plugin-master/lib/
+将删除 plugins/flutter_webview_plugin-master/pubspec.yaml
