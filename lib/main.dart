@@ -3,6 +3,7 @@ import './widget/MyBottomNavigation.dart';
 import './ui/DrawWidgetUI.dart';
 import './ui/SearchPageUI.dart';
 import './ui/HomePageUI.dart';
+import './ui/SystemTressUI.dart';
 
 void main() => runApp(MyApp());
 
@@ -49,10 +50,12 @@ class _MyHomeState extends State<MyHomePage> with AutomaticKeepAliveClientMixin{
     super.initState();
     _pageList = [
       HomePageUI(),
+      SystemTreeUI(),
     ];
   }
 
   void _handleChange(int value){
+    _index = value;
     setState(() {
       if(value == 0 || value == 1 || value == 3) {
         _isShowAppBar = true;

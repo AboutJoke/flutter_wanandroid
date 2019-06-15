@@ -22,6 +22,8 @@ class _SearchResultState extends State<SearchResultPage> {
   List<Article> data = new List();
   int page = 0;
   ScrollController _scrollController = new ScrollController();
+  int pageCount = 0;
+  bool isLastData = false;
 
   @override
   void initState() {
@@ -57,8 +59,11 @@ class _SearchResultState extends State<SearchResultPage> {
   Widget _rendRow(BuildContext context, int index) {
     if (index < data.length) {
       return _itemView(context, index);
+    } else if(!isLastData) {
+      return _getMoreWidget();
+    } else {
+      return _lastWidget();
     }
-    return _getMoreWidget();
   }
 
   Widget _itemView(BuildContext context, int index) {
@@ -139,6 +144,21 @@ class _SearchResultState extends State<SearchResultPage> {
     );
   }
 
+  Widget _lastWidget() {
+    return new Container(
+      padding: EdgeInsets.all(16),
+      alignment: Alignment.center,
+      child: SizedBox(
+        height: 24,
+        child: new Text(
+          "没有数据了",
+          textAlign: TextAlign.center,
+          style: new TextStyle(fontSize: 14, color: Colors.black26),
+        ),
+      ),
+    );
+  }
+
   void _onItemClick(Article article) {
     RouteUtils.toWebView(context, article.title, article.link);
   }
@@ -154,10 +174,24 @@ class _SearchResultState extends State<SearchResultPage> {
 
   Future<Null> _getMoreData() async {
     page++;
-    CommonService().getSearchResult((ArticleModel _articleModel) {
+    if(page < pageCount) {
+      CommonService().getSearchResult((ArticleModel _articleModel) {
+        setState(() {
+          isLastData = false;
+          data.addAll(_articleModel.data.datas);
+        });
+      }, page, widget.id);
+    } else{
       setState(() {
-        data = _articleModel.data.datas;
+        isLastData = true;
       });
-    }, page, widget.id);
+    }
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _scrollController.dispose();
   }
 }

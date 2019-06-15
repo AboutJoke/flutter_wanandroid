@@ -4,6 +4,8 @@ import 'package:flutter_wanandroid/model/ArticleModel.dart';
 import 'package:flutter_wanandroid/model/BannerModel.dart';
 import 'package:flutter_wanandroid/model/UserModel.dart';
 import '../model/HotWordModel.dart';
+import '../model/SystemTreeModel.dart';
+import '../model/SystemTreeContentModel.dart';
 import 'DioManager.dart';
 import 'package:flutter_wanandroid/common/User.dart';
 
@@ -71,6 +73,20 @@ class CommonService {
     });
     DioManager.singleton.dio.post(Api.SEARCH_RESULT+"$_page/json", data: formData, options: _getOptions()).then((response) {
       callback(ArticleModel(response.data));
+    });
+  }
+
+  /// 获取知识体系列表
+  void getSystemTree(Function callback) async {
+    DioManager.singleton.dio.get(Api.SYSTEM_TREE, options: _getOptions()).then((response) {
+      callback(SystemTreeModel(response.data));
+    });
+  }
+
+  /// 获取知识体系列表详情
+  void getSystemTreeContent(Function callback,int _page,int _id) async {
+    DioManager.singleton.dio.get(Api.SYSTEM_TREE_CONTENT+"$_page/json?cid=$_id", options: _getOptions()).then((response) {
+      callback(SystemTreeContentModel(response.data));
     });
   }
 
