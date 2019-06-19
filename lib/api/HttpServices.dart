@@ -6,6 +6,8 @@ import 'package:flutter_wanandroid/model/UserModel.dart';
 import '../model/HotWordModel.dart';
 import '../model/SystemTreeModel.dart';
 import '../model/SystemTreeContentModel.dart';
+import '../model/WxArticleTitleModel.dart';
+import '../model/WxArticleContentModel.dart';
 import 'DioManager.dart';
 import 'package:flutter_wanandroid/common/User.dart';
 
@@ -87,6 +89,20 @@ class CommonService {
   void getSystemTreeContent(Function callback,int _page,int _id) async {
     DioManager.singleton.dio.get(Api.SYSTEM_TREE_CONTENT+"$_page/json?cid=$_id", options: _getOptions()).then((response) {
       callback(SystemTreeContentModel(response.data));
+    });
+  }
+
+  /// 获取公众号名称
+  void getWxTitleList(Function callback) async {
+    DioManager.singleton.dio.get(Api.WX_LIST, options: _getOptions()).then((response) {
+      callback(WxArticleTitleModel(response.data));
+    });
+  }
+
+  /// 获取对应微信公众号下文章
+  void getWxArticleList(Function callback,int _id,int _page) async {
+    DioManager.singleton.dio.get(Api.WX_ARTICLE_LIST+"$_id/$_page/json", options: _getOptions()).then((response) {
+      callback(WxArticleContentModel(response.data));
     });
   }
 

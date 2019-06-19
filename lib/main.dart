@@ -4,6 +4,7 @@ import './ui/DrawWidgetUI.dart';
 import './ui/SearchPageUI.dart';
 import './ui/HomePageUI.dart';
 import './ui/SystemTressUI.dart';
+import './ui/WxArticleListPageUI.dart';
 import 'utils/RouteUtil.dart';
 
 void main() => runApp(MyApp());
@@ -52,6 +53,7 @@ class _MyHomeState extends State<MyHomePage> with AutomaticKeepAliveClientMixin{
     _pageList = [
       HomePageUI(),
       SystemTreeUI(),
+      WxArticleListPageUI(),
     ];
   }
 
