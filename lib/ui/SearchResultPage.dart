@@ -3,6 +3,7 @@ import '../model/ArticleModel.dart';
 import '../api/HttpServices.dart';
 import '../utils/RouteUtil.dart';
 import '../utils/timeline_util.dart';
+import '../widget/CommonListView.dart';
 
 // ignore: must_be_immutable
 class SearchResultPage extends StatefulWidget {
@@ -23,7 +24,8 @@ class _SearchResultState extends State<SearchResultPage> {
   int page = 0;
   ScrollController _scrollController = new ScrollController();
   int pageCount = 0;
-  bool isLastData = false;
+  bool isLastPage = false;
+  bool hasMoreData = true;
 
   @override
   void initState() {
@@ -31,7 +33,7 @@ class _SearchResultState extends State<SearchResultPage> {
     _getData();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent) {
+          _scrollController.position.maxScrollExtent && hasMoreData) {
         _getMoreData();
       }
     });
@@ -59,10 +61,10 @@ class _SearchResultState extends State<SearchResultPage> {
   Widget _rendRow(BuildContext context, int index) {
     if (index < data.length) {
       return _itemView(context, index);
-    } else if(!isLastData) {
-      return _getMoreWidget();
+    } else if(!isLastPage && hasMoreData) {
+      return CommonListView.loading();
     } else {
-      return _lastWidget();
+      return CommonListView.noData();
     }
   }
 
@@ -130,35 +132,6 @@ class _SearchResultState extends State<SearchResultPage> {
     );
   }
 
-  Widget _getMoreWidget() {
-    return Container(
-      padding: EdgeInsets.all(16),
-      alignment: Alignment.center,
-      child: SizedBox(
-        width: 24,
-        height: 24,
-        child: CircularProgressIndicator(
-          strokeWidth: 2,
-        ),
-      ),
-    );
-  }
-
-  Widget _lastWidget() {
-    return new Container(
-      padding: EdgeInsets.all(16),
-      alignment: Alignment.center,
-      child: SizedBox(
-        height: 24,
-        child: new Text(
-          "没有数据了",
-          textAlign: TextAlign.center,
-          style: new TextStyle(fontSize: 14, color: Colors.black26),
-        ),
-      ),
-    );
-  }
-
   void _onItemClick(Article article) {
     RouteUtils.toWebView(context, article.title, article.link);
   }
@@ -168,6 +141,11 @@ class _SearchResultState extends State<SearchResultPage> {
     CommonService().getSearchResult((ArticleModel _articleModel) {
       setState(() {
         data = _articleModel.data.datas;
+        if(_articleModel.data.pageCount == 1) {
+          hasMoreData = false;
+        } else{
+          hasMoreData = true;
+        }
       });
     }, page, widget.id);
   }
@@ -177,13 +155,13 @@ class _SearchResultState extends State<SearchResultPage> {
     if(page < pageCount) {
       CommonService().getSearchResult((ArticleModel _articleModel) {
         setState(() {
-          isLastData = false;
+          isLastPage = false;
           data.addAll(_articleModel.data.datas);
         });
       }, page, widget.id);
     } else{
       setState(() {
-        isLastData = true;
+        isLastPage = true;
       });
     }
   }

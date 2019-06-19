@@ -4,6 +4,7 @@ import './ui/DrawWidgetUI.dart';
 import './ui/SearchPageUI.dart';
 import './ui/HomePageUI.dart';
 import './ui/SystemTressUI.dart';
+import 'utils/RouteUtil.dart';
 
 void main() => runApp(MyApp());
 
@@ -81,9 +82,7 @@ class _MyHomeState extends State<MyHomePage> with AutomaticKeepAliveClientMixin{
   }
   
   void _handlerPress() {
-    Navigator.push(context, new MaterialPageRoute(builder: (context) {
-      return new WidgetSearchPage(null);
-    }));
+    RouteUtils.push(context, new WidgetSearchPage(null));
   }
 
   List<Widget> _appBarAction() {

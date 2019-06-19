@@ -5,6 +5,7 @@ import '../widget/BannerWidger.dart';
 import '../api/HttpServices.dart';
 import '../utils/timeline_util.dart';
 import '../utils/RouteUtil.dart';
+import '../widget/CommonListView.dart';
 
 class HomePageUI extends StatefulWidget {
   @override
@@ -142,22 +143,7 @@ class _HomePageState extends State<HomePageUI>
         ),
       );
     }
-    return _getMoreWidget();
-  }
-
-  ///上拉加载状态
-  Widget _getMoreWidget() {
-    return Container(
-      padding: EdgeInsets.all(16),
-      alignment: Alignment.center,
-      child: SizedBox(
-        width: 24,
-        height: 24,
-        child: CircularProgressIndicator(
-          strokeWidth: 2,
-        ),
-      ),
-    );
+    return CommonListView.loading();
   }
 
   @override

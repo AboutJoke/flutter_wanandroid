@@ -4,6 +4,7 @@ import '../model/SystemTreeContentModel.dart';
 import '../api/HttpServices.dart';
 import '../utils/RouteUtil.dart';
 import '../utils/timeline_util.dart';
+import '../widget/CommonListView.dart';
 
 class SystemTreeDetail extends StatefulWidget {
   SystemTreeData data;
@@ -84,7 +85,8 @@ class _DetailListState extends State<DetailList> {
   ScrollController _scrollController = new ScrollController();
   int page = 0;
   int pageCount = 0;
-  bool isLastData = false;
+  bool isLastPage = false;
+  bool hasMoreData = true;
 
   @override
   void initState() {
@@ -92,7 +94,7 @@ class _DetailListState extends State<DetailList> {
     _getData();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent) {
+          _scrollController.position.maxScrollExtent && hasMoreData) {
         _getMoreData();
       }
     });
@@ -103,8 +105,12 @@ class _DetailListState extends State<DetailList> {
     CommonService().getSystemTreeContent((SystemTreeContentModel _model) {
       setState(() {
         pageCount = _model.data.pageCount;
-        print(_model.data.pageCount);
         _data = _model.data.datas;
+        if(_model.data.pageCount == 1) {
+          hasMoreData = false;
+        } else{
+          hasMoreData = true;
+        }
       });
     }, page, widget.id);
   }
@@ -114,13 +120,13 @@ class _DetailListState extends State<DetailList> {
     if (page < pageCount) {
       CommonService().getSystemTreeContent((SystemTreeContentModel _model) {
         setState(() {
-          isLastData = false;
+          isLastPage = false;
           _data.addAll(_model.data.datas);
         });
       }, page, widget.id);
     } else {
       setState(() {
-        isLastData = true;
+        isLastPage = true;
       });
     }
   }
@@ -144,10 +150,10 @@ class _DetailListState extends State<DetailList> {
   Widget _renderRow(BuildContext context, int index) {
     if (index < _data.length) {
       return _itemView(context, index);
-    } else if (!isLastData) {
-      return _getMoreWidget();
+    } else if (!isLastPage && hasMoreData) {
+      return CommonListView.loading();
     } else {
-      return _lastWidget();
+      return CommonListView.noData();
     }
   }
 
@@ -164,35 +170,6 @@ class _DetailListState extends State<DetailList> {
     return Container(
       height: 0.5,
       color: Colors.black26,
-    );
-  }
-
-  Widget _getMoreWidget() {
-    return Container(
-      padding: EdgeInsets.all(16),
-      alignment: Alignment.center,
-      child: SizedBox(
-        width: 24,
-        height: 24,
-        child: CircularProgressIndicator(
-          strokeWidth: 2,
-        ),
-      ),
-    );
-  }
-
-  Widget _lastWidget() {
-    return new Container(
-      padding: EdgeInsets.all(16),
-      alignment: Alignment.center,
-      child: SizedBox(
-        height: 24,
-        child: new Text(
-          "没有数据了",
-          textAlign: TextAlign.center,
-          style: new TextStyle(fontSize: 14, color: Colors.black26),
-        ),
-      ),
     );
   }
 
