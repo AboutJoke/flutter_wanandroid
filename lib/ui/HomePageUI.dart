@@ -98,12 +98,12 @@ class _HomePageState extends State<HomePageUI>
                   new Text(
                     _data[index - 1].author,
                     textAlign: TextAlign.start,
-                    style: TextStyle(fontSize: 14, color: Colors.grey),
+                    style: TextStyle(fontSize: 12, color: Colors.grey),
                   ),
                   new Expanded(
                     child: new Text(
                       TimelineUtil.format(_data[index - 1].publishTime),
-                      style: TextStyle(fontSize: 14, color: Colors.grey),
+                      style: TextStyle(fontSize: 12, color: Colors.grey),
                       textAlign: TextAlign.end,
                     ),
                   )
@@ -133,7 +133,7 @@ class _HomePageState extends State<HomePageUI>
                     child: new Text(
                       _data[index - 1].superChapterName,
                       textAlign: TextAlign.end,
-                      style: TextStyle(fontSize: 14, color: Colors.grey),
+                      style: TextStyle(fontSize: 12, color: Colors.grey),
                     ),
                   ),
                 ],

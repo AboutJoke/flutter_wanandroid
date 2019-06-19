@@ -8,6 +8,7 @@ import '../model/SystemTreeModel.dart';
 import '../model/SystemTreeContentModel.dart';
 import '../model/WxArticleTitleModel.dart';
 import '../model/WxArticleContentModel.dart';
+import '../model/NavigationModel.dart';
 import 'DioManager.dart';
 import 'package:flutter_wanandroid/common/User.dart';
 
@@ -103,6 +104,13 @@ class CommonService {
   void getWxArticleList(Function callback,int _id,int _page) async {
     DioManager.singleton.dio.get(Api.WX_ARTICLE_LIST+"$_id/$_page/json", options: _getOptions()).then((response) {
       callback(WxArticleContentModel(response.data));
+    });
+  }
+
+  /// 获取导航列表数据
+  void getNavigationList(Function callback) async {
+    DioManager.singleton.dio.get(Api.NAVI_LIST, options: _getOptions()).then((response) {
+      callback(NavigationModel(response.data));
     });
   }
 
