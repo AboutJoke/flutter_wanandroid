@@ -6,9 +6,18 @@ import './ui/HomePageUI.dart';
 import './ui/SystemTressUI.dart';
 import './ui/WxArticleListPageUI.dart';
 import './ui/NavigationPageUI.dart';
+import './ui/ProjectListPageUI.dart';
+import 'common/User.dart';
 import 'utils/RouteUtil.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  getLoginInfo();
+  runApp(MyApp());
+}
+
+Future<Null> getLoginInfo() async {
+  User.singleton.getUserInfo();
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -56,6 +65,7 @@ class _MyHomeState extends State<MyHomePage> with AutomaticKeepAliveClientMixin{
       SystemTreeUI(),
       WxArticleListPageUI(),
       NavigationPageUI(),
+      ProjectListPageUI(),
     ];
   }
 

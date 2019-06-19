@@ -9,6 +9,8 @@ import '../model/SystemTreeContentModel.dart';
 import '../model/WxArticleTitleModel.dart';
 import '../model/WxArticleContentModel.dart';
 import '../model/NavigationModel.dart';
+import '../model/ProjectListModel.dart';
+import '../model/ProjectTreeModel.dart';
 import 'DioManager.dart';
 import 'package:flutter_wanandroid/common/User.dart';
 
@@ -111,6 +113,20 @@ class CommonService {
   void getNavigationList(Function callback) async {
     DioManager.singleton.dio.get(Api.NAVI_LIST, options: _getOptions()).then((response) {
       callback(NavigationModel(response.data));
+    });
+  }
+
+  /// 获取项目分类
+  void getProjectTree(Function callback) async {
+    DioManager.singleton.dio.get(Api.PROJECT_TREE, options: _getOptions()).then((response) {
+      callback(ProjectTreeModel(response.data));
+    });
+  }
+
+  /// 获取项目列表
+  void getProjectList(Function callback,int _page,int _id) async {
+    DioManager.singleton.dio.get(Api.PROJECT_LIST+"$_page/json?cid=$_id", options: _getOptions()).then((response) {
+      callback(ProjectTreeListModel(response.data));
     });
   }
 
