@@ -87,7 +87,12 @@ class _HomePageState extends State<HomePageUI>
     if (index - 1 < _data.length) {
       return InkWell(
         onTap: () {
-          RouteUtils.toWebView(context, _data[index-1].title, _data[index-1].link);
+          RouteUtils.toWebView(
+              context: context,
+              title: _data[index-1].title,
+              url: _data[index-1].link,
+              author: _data[index-1].author,
+              isCollect: _data[index-1].collect);
         },
         child: new Column(
           children: <Widget>[

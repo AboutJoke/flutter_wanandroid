@@ -56,7 +56,8 @@ class _BannerWidgetState extends State<BannerWidget> {
   Widget buildItemImageWidget(BuildContext context, int index) {
     return new InkWell(
       onTap: () {
-        RouteUtils.toWebView(context, _list[index].title, _list[index].url);
+        RouteUtils.toWebView(
+            context: context, title: _list[index].title, url: _list[index].url);
       },
       child: new Container(
         child: new Image.network(

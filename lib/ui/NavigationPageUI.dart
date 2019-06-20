@@ -8,7 +8,6 @@ class NavigationPageUI extends StatefulWidget {
   State<StatefulWidget> createState() {
     return new _NavigationState();
   }
-
 }
 
 class _NavigationState extends State<NavigationPageUI> {
@@ -102,7 +101,11 @@ class _NavigationState extends State<NavigationPageUI> {
   }
 
   void _onItemClick(NavigationArticle article) {
-    RouteUtils.toWebView(context, article.title, article.link);
+    RouteUtils.toWebView(
+        context: context,
+        title: article.title,
+        url: article.link,
+        author: article.author,
+        isCollect: article.collect);
   }
-
 }

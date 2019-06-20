@@ -33,7 +33,8 @@ class _SearchResultState extends State<SearchResultPage> {
     _getData();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent && hasMoreData) {
+              _scrollController.position.maxScrollExtent &&
+          hasMoreData) {
         _getMoreData();
       }
     });
@@ -61,7 +62,7 @@ class _SearchResultState extends State<SearchResultPage> {
   Widget _rendRow(BuildContext context, int index) {
     if (index < data.length) {
       return _itemView(context, index);
-    } else if(!isLastPage && hasMoreData) {
+    } else if (!isLastPage && hasMoreData) {
       return CommonListView.loading();
     } else {
       return CommonListView.noData();
@@ -133,7 +134,12 @@ class _SearchResultState extends State<SearchResultPage> {
   }
 
   void _onItemClick(Article article) {
-    RouteUtils.toWebView(context, article.title, article.link);
+    RouteUtils.toWebView(
+        context: context,
+        title: article.title,
+        url: article.link,
+        author: article.author,
+        isCollect: article.collect);
   }
 
   Future<Null> _getData() async {
@@ -141,9 +147,9 @@ class _SearchResultState extends State<SearchResultPage> {
     CommonService().getSearchResult((ArticleModel _articleModel) {
       setState(() {
         data = _articleModel.data.datas;
-        if(_articleModel.data.pageCount == 1) {
+        if (_articleModel.data.pageCount == 1) {
           hasMoreData = false;
-        } else{
+        } else {
           hasMoreData = true;
         }
       });
@@ -152,14 +158,14 @@ class _SearchResultState extends State<SearchResultPage> {
 
   Future<Null> _getMoreData() async {
     page++;
-    if(page < pageCount) {
+    if (page < pageCount) {
       CommonService().getSearchResult((ArticleModel _articleModel) {
         setState(() {
           isLastPage = false;
           data.addAll(_articleModel.data.datas);
         });
       }, page, widget.id);
-    } else{
+    } else {
       setState(() {
         isLastPage = true;
       });

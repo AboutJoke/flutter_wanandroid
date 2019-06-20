@@ -161,7 +161,12 @@ class _ProjectDetailState extends State<ProjectDetailList> {
   }
 
   void _onItemClick(ProjectTreeListDatas itemData) {
-    RouteUtils.toWebView(context, itemData.title, itemData.link);
+    RouteUtils.toWebView(
+        context: context,
+        title: itemData.title,
+        url: itemData.link,
+        author: itemData.author,
+        isCollect: itemData.collect);
   }
 
   Widget _separatorView(BuildContext context, int index) {

@@ -11,6 +11,7 @@ import '../model/WxArticleContentModel.dart';
 import '../model/NavigationModel.dart';
 import '../model/ProjectListModel.dart';
 import '../model/ProjectTreeModel.dart';
+import '../model/AddCollectModel.dart';
 import 'DioManager.dart';
 import 'package:flutter_wanandroid/common/User.dart';
 
@@ -66,67 +67,110 @@ class CommonService {
 
   /// 获取搜索热词
   void getSearchHotWord(Function callback) async {
-    DioManager.singleton.dio.get(Api.SEARCH_HOT_WORD, options: _getOptions()).then((response) {
+    DioManager.singleton.dio
+        .get(Api.SEARCH_HOT_WORD, options: _getOptions())
+        .then((response) {
       callback(HotWordModel(response.data));
     });
   }
 
   /// 获取搜索结果
-  void getSearchResult(Function callback,int _page,String _id) async {
+  void getSearchResult(Function callback, int _page, String _id) async {
     FormData formData = new FormData.from({
       "k": _id,
     });
-    DioManager.singleton.dio.post(Api.SEARCH_RESULT+"$_page/json", data: formData, options: _getOptions()).then((response) {
+    DioManager.singleton.dio
+        .post(Api.SEARCH_RESULT + "$_page/json",
+            data: formData, options: _getOptions())
+        .then((response) {
       callback(ArticleModel(response.data));
     });
   }
 
   /// 获取知识体系列表
   void getSystemTree(Function callback) async {
-    DioManager.singleton.dio.get(Api.SYSTEM_TREE, options: _getOptions()).then((response) {
+    DioManager.singleton.dio
+        .get(Api.SYSTEM_TREE, options: _getOptions())
+        .then((response) {
       callback(SystemTreeModel(response.data));
     });
   }
 
   /// 获取知识体系列表详情
-  void getSystemTreeContent(Function callback,int _page,int _id) async {
-    DioManager.singleton.dio.get(Api.SYSTEM_TREE_CONTENT+"$_page/json?cid=$_id", options: _getOptions()).then((response) {
+  void getSystemTreeContent(Function callback, int _page, int _id) async {
+    DioManager.singleton.dio
+        .get(Api.SYSTEM_TREE_CONTENT + "$_page/json?cid=$_id",
+            options: _getOptions())
+        .then((response) {
       callback(SystemTreeContentModel(response.data));
     });
   }
 
   /// 获取公众号名称
   void getWxTitleList(Function callback) async {
-    DioManager.singleton.dio.get(Api.WX_LIST, options: _getOptions()).then((response) {
+    DioManager.singleton.dio
+        .get(Api.WX_LIST, options: _getOptions())
+        .then((response) {
       callback(WxArticleTitleModel(response.data));
     });
   }
 
   /// 获取对应微信公众号下文章
-  void getWxArticleList(Function callback,int _id,int _page) async {
-    DioManager.singleton.dio.get(Api.WX_ARTICLE_LIST+"$_id/$_page/json", options: _getOptions()).then((response) {
+  void getWxArticleList(Function callback, int _id, int _page) async {
+    DioManager.singleton.dio
+        .get(Api.WX_ARTICLE_LIST + "$_id/$_page/json", options: _getOptions())
+        .then((response) {
       callback(WxArticleContentModel(response.data));
     });
   }
 
   /// 获取导航列表数据
   void getNavigationList(Function callback) async {
-    DioManager.singleton.dio.get(Api.NAVI_LIST, options: _getOptions()).then((response) {
+    DioManager.singleton.dio
+        .get(Api.NAVI_LIST, options: _getOptions())
+        .then((response) {
       callback(NavigationModel(response.data));
     });
   }
 
   /// 获取项目分类
   void getProjectTree(Function callback) async {
-    DioManager.singleton.dio.get(Api.PROJECT_TREE, options: _getOptions()).then((response) {
+    DioManager.singleton.dio
+        .get(Api.PROJECT_TREE, options: _getOptions())
+        .then((response) {
       callback(ProjectTreeModel(response.data));
     });
   }
 
   /// 获取项目列表
-  void getProjectList(Function callback,int _page,int _id) async {
-    DioManager.singleton.dio.get(Api.PROJECT_LIST+"$_page/json?cid=$_id", options: _getOptions()).then((response) {
+  void getProjectList(Function callback, int _page, int _id) async {
+    DioManager.singleton.dio
+        .get(Api.PROJECT_LIST + "$_page/json?cid=$_id", options: _getOptions())
+        .then((response) {
       callback(ProjectTreeListModel(response.data));
+    });
+  }
+
+  /// 收藏文章
+  void addArticleCollection(
+      Function callback, String _title, String _author, String _link) async {
+    FormData formData =
+        new FormData.from({"title": _title, "author": _author, "link": _link});
+    DioManager.singleton.dio
+        .post(Api.ADD_COLLECTION, data: formData, options: _getOptions())
+        .then((response) {
+      callback(AddCollectModel.fromJson(response.data), response);
+    });
+  }
+
+  /// 取消收藏文章
+  void removeArticleCollection(Function callback, int _id) async {
+    FormData formData = new FormData.from({"originId": -1});
+    DioManager.singleton.dio
+        .post(Api.CANCEL_COLLECTION + "$_id/json",
+            data: formData, options: _getOptions())
+        .then((response) {
+      callback(AddCollectModel.fromJson(response.data));
     });
   }
 

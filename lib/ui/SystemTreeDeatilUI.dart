@@ -94,7 +94,8 @@ class _DetailListState extends State<DetailList> {
     _getData();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent && hasMoreData) {
+              _scrollController.position.maxScrollExtent &&
+          hasMoreData) {
         _getMoreData();
       }
     });
@@ -106,9 +107,9 @@ class _DetailListState extends State<DetailList> {
       setState(() {
         pageCount = _model.data.pageCount;
         _data = _model.data.datas;
-        if(_model.data.pageCount == 1) {
+        if (_model.data.pageCount == 1) {
           hasMoreData = false;
-        } else{
+        } else {
           hasMoreData = true;
         }
       });
@@ -161,7 +162,12 @@ class _DetailListState extends State<DetailList> {
     return InkWell(
       child: _newsRow(_data[index]),
       onTap: () {
-        RouteUtils.toWebView(context, _data[index].title, _data[index].link);
+        RouteUtils.toWebView(
+            context: context,
+            title: _data[index].title,
+            url: _data[index].link,
+            author: _data[index].author,
+            isCollect: _data[index].collect);
       },
     );
   }

@@ -158,7 +158,12 @@ class _DetailListState extends State<DetailList> {
     return InkWell(
       child: _newsRow(_data[index]),
       onTap: () {
-        RouteUtils.toWebView(context, _data[index].title, _data[index].link);
+        RouteUtils.toWebView(
+            context: context,
+            title: _data[index].title,
+            url: _data[index].link,
+            author: _data[index].author,
+            isCollect: _data[index].collect);
       },
     );
   }

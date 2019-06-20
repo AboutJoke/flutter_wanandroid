@@ -29,19 +29,19 @@ class _LoginPageState extends State<LoginPageUI> {
     _isButton1Disabled = true;
   }
 
-  Future<Null> _onLogin() async{
-    CommonService().login((UserModel _userModel,Response _response) {
-      if(_userModel != null) {
+  Future<Null> _onLogin() async {
+    CommonService().login((UserModel _userModel, Response _response) {
+      if (_userModel != null) {
         User().saveUserInfo(_userModel, _response);
         Application.eventBus.fire(new LoginEvent());
-        if(_userModel.errorCode == CommonService.RESULT_OK) {
+        if (_userModel.errorCode == CommonService.RESULT_OK) {
           Navigator.of(context).pop(this);
           Fluttertoast.showToast(msg: "登录成功");
         } else {
           Fluttertoast.showToast(msg: _userModel.errorMsg);
         }
       }
-    } , _userNameController.text, _userPwdController.text);
+    }, _userNameController.text, _userPwdController.text);
   }
 
   _onTextFileChange() {
@@ -116,7 +116,8 @@ class _LoginPageState extends State<LoginPageUI> {
               margin: const EdgeInsets.only(left: 16.0, right: 16.0, top: 40.0),
               height: 48,
               width: double.infinity,
-              child: new FlatButton( // onPress为null 显示disable状态
+              child: new FlatButton(
+                // onPress为null 显示disable状态
                 onPressed: _isButton1Disabled
                     ? null
                     : () {
